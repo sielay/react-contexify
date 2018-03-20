@@ -23,7 +23,8 @@ class ContextMenuProvider extends PureComponent {
     event: PropTypes.string,
     className: PropTypes.string,
     style: PropTypes.object,
-    data: PropTypes.object
+    data: PropTypes.object,
+    propagation: PropTypes.bool
   };
 
   static defaultProps = {
@@ -31,7 +32,8 @@ class ContextMenuProvider extends PureComponent {
     event: 'onContextMenu',
     className: '',
     style: {},
-    data: null
+    data: null,
+    propagation: true
   };
 
   constructor(props) {
@@ -41,6 +43,9 @@ class ContextMenuProvider extends PureComponent {
 
   handleEvent = e => {
     e.preventDefault();
+    if (!this.props.propagation) {
+      e.stopPropagation();
+    }
     eventManager.emit(
       `display::${this.props.id}`,
       e.nativeEvent,
@@ -59,6 +64,7 @@ class ContextMenuProvider extends PureComponent {
       children,
       className,
       style,
+      propagation,
       ...rest
     } = this.props;
 
@@ -76,11 +82,12 @@ class ContextMenuProvider extends PureComponent {
   }
 
   render() {
-    const { renderTag, event, className, style } = this.props;
+    const { renderTag, event, className, style, propagation } = this.props;
     const attributes = Object.assign({}, {
       [event]: this.handleEvent,
       className,
-      style
+      style,
+      propagation
     });
 
     return createElement(
