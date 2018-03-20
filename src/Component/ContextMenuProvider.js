@@ -43,9 +43,7 @@ class ContextMenuProvider extends PureComponent {
 
   handleEvent = e => {
     e.preventDefault();
-    console.log("propagation", this.props.propagation);
     if (!this.props.propagation) {
-      console.log("stopped");
       e.stopPropagation();
     }
     eventManager.emit(
